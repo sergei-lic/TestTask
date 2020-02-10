@@ -18,7 +18,7 @@ namespace TestTask
             IsEof = true;
 
             // TODO : Заменить на создание реального стрима для чтения файла!
-            _localStream = null;
+            _localStream = new FileStream(fileFullPath, FileMode.Open);
         }
                 
         /// <summary>
@@ -39,7 +39,7 @@ namespace TestTask
         public char ReadNextChar()
         {
             // TODO : Необходимо считать очередной символ из _localStream
-            throw new NotImplementedException();
+            return _localStream.ReadByte();
         }
 
         /// <summary>
@@ -55,6 +55,11 @@ namespace TestTask
 
             _localStream.Position = 0;
             IsEof = false;
+        }
+
+        public void Close()
+        {
+            _localStream.Close();
         }
     }
 }

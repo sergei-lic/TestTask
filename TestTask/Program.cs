@@ -16,11 +16,16 @@ namespace TestTask
         /// Второй параметр - путь до второго файла.</param>
         static void Main(string[] args)
         {
+            args = new string[] {"c:\\tmp\\File1.txt", "c:\\tmp\\File2.txt" };
+
             IReadOnlyStream inputStream1 = GetInputStream(args[0]);
             IReadOnlyStream inputStream2 = GetInputStream(args[1]);
 
             IList<LetterStats> singleLetterStats = FillSingleLetterStats(inputStream1);
+            inputStream1.Close();
+
             IList<LetterStats> doubleLetterStats = FillDoubleLetterStats(inputStream2);
+            inputStream2.Close();
 
             RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
             RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
@@ -29,6 +34,7 @@ namespace TestTask
             PrintStatistic(doubleLetterStats);
 
             // TODO : Необжодимо дождаться нажатия клавиши, прежде чем завершать выполнение программы.
+            Console.Read();
         }
 
         /// <summary>
