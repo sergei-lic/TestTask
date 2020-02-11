@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace TestTask
@@ -18,20 +19,33 @@ namespace TestTask
         {
             args = new string[] {"c:\\tmp\\File1.txt", "c:\\tmp\\File2.txt" };
 
-            IReadOnlyStream inputStream1 = GetInputStream(args[0]);
-            IReadOnlyStream inputStream2 = GetInputStream(args[1]);
 
-            IList<LetterStats> singleLetterStats = FillSingleLetterStats(inputStream1);
-            inputStream1.Close();
 
-            IList<LetterStats> doubleLetterStats = FillDoubleLetterStats(inputStream2);
-            inputStream2.Close();
+            System.IO.TextReader reader = new System.IO.StreamReader(args[0]);
 
-            RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
-            RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
+            string text = reader.ReadToEnd();
 
-            PrintStatistic(singleLetterStats);
-            PrintStatistic(doubleLetterStats);
+            var result = text.ToCharArray().GroupBy(x => x).Select(x => new Tuple<char, int>(x.Key, x.Count()));
+
+            foreach(var item in result)
+            {
+                Console.WriteLine("{0} - {1}", item.Item1, item.Item2);
+            }
+
+            //IReadOnlyStream inputStream1 = GetInputStream(args[0]);
+            //IReadOnlyStream inputStream2 = GetInputStream(args[1]);
+
+            //IList<LetterStats> singleLetterStats = FillSingleLetterStats(inputStream1);
+            //inputStream1.Close();
+
+            //IList<LetterStats> doubleLetterStats = FillDoubleLetterStats(inputStream2);
+            //inputStream2.Close();
+
+            //RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
+            //RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
+
+            //PrintStatistic(singleLetterStats);
+            //PrintStatistic(doubleLetterStats);
 
             // TODO : Необжодимо дождаться нажатия клавиши, прежде чем завершать выполнение программы.
             Console.Read();
