@@ -19,27 +19,26 @@ namespace TestTask
         {
             args = new string[] {"c:\\tmp\\File1.txt", "c:\\tmp\\File2.txt" };
 
-
-
-            System.IO.TextReader reader = new System.IO.StreamReader(args[0]);
-
-            string text = reader.ReadToEnd();
-
-            var result = text.ToCharArray().GroupBy(x => x).Select(x => new Tuple<char, int>(x.Key, x.Count()));
-
-            foreach(var item in result)
+            using (System.IO.TextReader reader = new System.IO.StreamReader(args[0]))
             {
-                Console.WriteLine("{0} - {1}", item.Item1, item.Item2);
+                string text = reader.ReadToEnd();
+
+                IEnumerable<LetterStats> singleLetterStats = text.ToCharArray().GroupBy(letter => letter)
+                    .Select(group => new LetterStats() { Letter = group.Key.ToString(), Count = group.Count() });
+
+                IEnumerable<LetterStats> doubleLetterStats = text.ToUpper().ToCharArray().GroupBy(letter => letter)
+                    .Select(group => new LetterStats() { Letter = group.Key.ToString(), Count = group.Count() / 2 }).Where(letterStats => letterStats.Count > 0);
+
+                PrintStatistic(singleLetterStats);
+                PrintStatistic(doubleLetterStats);
             }
 
             //IReadOnlyStream inputStream1 = GetInputStream(args[0]);
             //IReadOnlyStream inputStream2 = GetInputStream(args[1]);
 
             //IList<LetterStats> singleLetterStats = FillSingleLetterStats(inputStream1);
-            //inputStream1.Close();
 
             //IList<LetterStats> doubleLetterStats = FillDoubleLetterStats(inputStream2);
-            //inputStream2.Close();
 
             //RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
             //RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
@@ -132,7 +131,8 @@ namespace TestTask
         private static void PrintStatistic(IEnumerable<LetterStats> letters)
         {
             // TODO : Выводить на экран статистику. Выводить предварительно отсортировав по алфавиту!
-            throw new NotImplementedException();
+            foreach (var item in letters.OrderBy(x => x.Letter)) Console.WriteLine("{0} - {1}", item.Letter, item.Count);
+            Console.WriteLine("".PadRight(30, '-'));
         }
 
         /// <summary>
