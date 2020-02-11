@@ -39,15 +39,7 @@ namespace TestTask
         public char ReadNextChar()
         {
             // TODO : Необходимо считать очередной символ из _localStream
-
-            //TextReader reader = new StreamReader(_localStream);
-
-
-            //StringReader sr = new StringReader(reader.ReadToEnd());
-
-            //sr.Read();
-            
-            return ' ';
+            return _localStream.ReadByte();
         }
 
         /// <summary>
